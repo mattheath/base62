@@ -3,6 +3,7 @@ package base62
 
 import (
 	"math"
+	"math/big"
 	"strings"
 )
 
@@ -48,4 +49,26 @@ func DecodeToInt64(s string) int64 {
 	}
 
 	return int64(n)
+}
+
+// EncodeBigInt return the base62 encoding of arbitrary precision integers
+func EncodeBigInt(n *big.Int) string {
+	var (
+		s    []byte   = make([]byte, 0)
+		rem  *big.Int = new(big.Int)
+		base *big.Int = new(big.Int)
+		zero *big.Int = new(big.Int)
+	)
+	base.SetInt64(62)
+	zero.SetInt64(0)
+
+	// Progressively divide by base, until we hit zero
+	// store remainder each time
+	// Prepend as an additional character is the higher power
+	for n.Cmp(zero) == 1 {
+		n, rem = n.DivMod(n, base, rem)
+		s = append([]byte{encodeStd[rem.Int64()]}, s...)
+	}
+
+	return string(s)
 }
