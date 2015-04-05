@@ -18,11 +18,13 @@ As a result, the encoded strings can be lexically sorted.
 
 ## Usage
 
+First `go get` the package:
 ```
 go get github.com/mattheath/base62
 ```
 
-```golang
+This can then be used as below:
+```go
 package main
 
 import (
@@ -32,7 +34,6 @@ import (
 )
 
 func main() {
-
 	// Encoding 64 bit integers
 	var n int64 = 4815162342
     encoded := base62.EncodeInt64(n)
