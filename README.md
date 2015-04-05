@@ -14,7 +14,7 @@ The encoding is different to base64 encoding in two ways:
 
 Note that this character ordering is also different to most other base62 encodings, but _preserves the sort order of encoded values_.
 
-As a result, the encoded strings can be lexically sorted.
+As a result, the encoded strings can be lexically sorted if either a sorting order such as [shortlex](http://en.wikipedia.org/wiki/Shortlex_order) is used, or if the resulting strings are left padded to ensure a consistent length.
 
 ## Usage
 
