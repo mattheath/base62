@@ -1,3 +1,4 @@
+// Package base62 implements base62 encoding
 package base62
 
 import (
@@ -8,6 +9,7 @@ import (
 const base = 62
 const encodeStd = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
 
+// EncodeInt64 returns the base62 encoding of n
 func EncodeInt64(n int64) string {
 	var (
 		s   []byte = make([]byte, 0)
@@ -25,7 +27,7 @@ func EncodeInt64(n int64) string {
 	return string(s)
 }
 
-//
+// DecodeToInt64 decodes a base62 encoded string
 func DecodeToInt64(s string) int64 {
 	var (
 		n     int64
