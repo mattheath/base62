@@ -72,3 +72,37 @@ func EncodeBigInt(n *big.Int) string {
 
 	return string(s)
 }
+
+// DecodeToBigInt returns an arbitrary precision integer from the base62 encoded string
+func DecodeToBigInt(s string) *big.Int {
+	var (
+		n *big.Int = new(big.Int)
+
+		c     *big.Int = new(big.Int)
+		idx   *big.Int = new(big.Int)
+		power *big.Int = new(big.Int)
+		exp   *big.Int = new(big.Int)
+		base  *big.Int = new(big.Int)
+	)
+	base.SetInt64(62)
+
+	// Run through each character to decode
+	for i, v := range s {
+		// Get index/position of the rune as a big int
+		idx.SetInt64(int64(strings.IndexRune(encodeStd, v)))
+
+		// Work downwards through exponents
+		exp.SetInt64(int64(len(s) - (i + 1)))
+
+		// Calculate power for this exponent
+		power.Exp(base, exp, nil)
+
+		// Multiplied by our index, gives us the value for this character
+		c = c.Mul(idx, power)
+
+		// Finally add to running total
+		n.Add(n, c)
+	}
+
+	return n
+}

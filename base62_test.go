@@ -37,7 +37,7 @@ func TestEncodeInt64(t *testing.T) {
 func TestDecodeToInt64(t *testing.T) {
 	for _, tc := range testcases {
 		v := DecodeToInt64(tc.encoded)
-		t.Logf("Decoded %s as %v", tc.encoded, v)
+		t.Logf("Decoded %s to %v", tc.encoded, v)
 		assert.Equal(t, tc.num, v)
 	}
 }
@@ -83,5 +83,13 @@ func TestEncodeBigInt(t *testing.T) {
 		v := EncodeBigInt(n)
 		t.Logf("Encoded %v as %s", tc.num, v)
 		assert.Equal(t, tc.encoded, v)
+	}
+}
+
+func TestDecodeToBigInt(t *testing.T) {
+	for _, tc := range bigTestcases {
+		v := DecodeToBigInt(tc.encoded)
+		t.Logf("Decoded %v to %s", tc.encoded, v.String())
+		assert.Equal(t, tc.num, v.String())
 	}
 }
