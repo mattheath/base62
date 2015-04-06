@@ -140,7 +140,7 @@ func TestDecodeToBigInt(t *testing.T) {
 // if these are left padded to the same length.
 //
 // An alternative sort method which could be used to avoid padding
-// would be a Shortlex sort, which sorts by cardinality, then lexically.
+// would be a Shortlex sort, which sorts by cardinality, then lexicographically
 func TestLexicalPaddedSort(t *testing.T) {
 
 	var (
@@ -182,11 +182,9 @@ func TestLexicalPaddedSort(t *testing.T) {
 }
 
 func padStringArray(s []string, maxlen int) []string {
-
 	for i, v := range s {
 		s[i] = pad(v, maxlen)
 	}
-
 	return s
 }
 
