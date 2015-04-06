@@ -35,8 +35,13 @@ func NewEncoding(encoder string) *Encoding {
 	}
 }
 
+// NewStdEncoding returns an Encoding preconfigured with the standard base62 alphabet
+func NewStdEncoding() *Encoding {
+	return NewEncoding(encodeStd)
+}
+
 // StdEncoding is the standard base62 encoding
-var StdEncoding = NewEncoding(encodeStd)
+var StdEncoding = NewStdEncoding()
 
 // Configurable options for an Encoding
 

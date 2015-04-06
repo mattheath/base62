@@ -47,7 +47,7 @@ func main() {
 
     // Padding can be specified using an option on an Encoding
     // eg. to pad strings to a minimum length of 15 chars:
-    e := base62.StdEncoding.Option(Padding(15))
+    e := base62.NewStdEncoding().Option(Padding(15))
     encoded = e.EncodeInt64(n)
     fmt.Println(encoded) // prints 0000000005Frvgk
 }
