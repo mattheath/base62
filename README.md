@@ -1,6 +1,6 @@
 # base62
 
-![Build Status](https://travis-ci.org/mattheath/base62.svg?branch=master) [![GoDoc](https://godoc.org/github.com/mattheath/base62?status.svg)](https://godoc.org/github.com/mattheath/base62)
+[![Build Status](https://travis-ci.org/mattheath/base62.svg?branch=master)](https://travis-ci.org/mattheath/base62) [![GoDoc](https://godoc.org/github.com/mattheath/base62?status.svg)](https://godoc.org/github.com/mattheath/base62)
 
 `base62` implements base62 encoding for integer numbers of arbitrary precision.
 
