@@ -144,9 +144,13 @@ func TestLexicalPaddedSort(t *testing.T) {
 
 	// Generate lots of numbers, and encode them
 	var i int64
+	var modifier int64 = 1
 	for i = 0; i < 100000; i++ {
+		if i%10000 == 0 {
+			modifier = modifier * 30
+		}
 
-		v := EncodeInt64(i)
+		v := EncodeInt64(i + modifier)
 
 		lexicalOrder = append(lexicalOrder, v)
 		originalOrder = append(originalOrder, v)
