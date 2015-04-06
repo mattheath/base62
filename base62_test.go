@@ -1,12 +1,17 @@
 package base62
 
 import (
+	"fmt"
 	"math/big"
+	"sort"
+	"strconv"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
+
+var result string
 
 var testcases = []struct {
 	num     int64
@@ -40,6 +45,22 @@ func TestDecodeToInt64(t *testing.T) {
 		t.Logf("Decoded %s to %v", tc.encoded, v)
 		assert.Equal(t, tc.num, v)
 	}
+}
+
+func BenchmarkEncodeInt64Medium(b *testing.B) {
+	var id string
+	for n := 0; n < b.N; n++ {
+		id = EncodeInt64(4815162342)
+	}
+	result = id
+}
+
+func BenchmarkEncodeInt64Long(b *testing.B) {
+	var id string
+	for n := 0; n < b.N; n++ {
+		id = EncodeInt64(9223372036854775807)
+	}
+	result = id
 }
 
 var bigTestcases = []struct {
@@ -86,10 +107,80 @@ func TestEncodeBigInt(t *testing.T) {
 	}
 }
 
+func BenchmarkEncodeBigIntVeryLong(b *testing.B) {
+	var (
+		v *big.Int = new(big.Int)
+		s string
+	)
+	v.SetString("340282366920938463463374607431768211455", 10)
+
+	b.ResetTimer()
+	for n := 0; n < b.N; n++ {
+		s = EncodeBigInt(v)
+	}
+	result = s
+}
+
 func TestDecodeToBigInt(t *testing.T) {
 	for _, tc := range bigTestcases {
 		v := DecodeToBigInt(tc.encoded)
 		t.Logf("Decoded %v to %s", tc.encoded, v.String())
 		assert.Equal(t, tc.num, v.String())
 	}
+}
+
+// TestLexicalPaddedSort tests that numbers encoded as base62 strings
+// are correctly lexically sorted with the original order preserved
+// if these are left padded to the same length.
+//
+// An alternative sort method which could be used to avoid padding
+// would be a Shortlex sort, which sorts by cardinality, then lexically.
+func TestLexicalPaddedSort(t *testing.T) {
+
+	var (
+		lexicalOrder  sort.StringSlice = make([]string, 0)
+		originalOrder                  = make([]string, 0)
+	)
+
+	// Generate lots of numbers, and encode them
+	var i int64
+	for i = 0; i < 100000; i++ {
+
+		v := EncodeInt64(i)
+
+		lexicalOrder = append(lexicalOrder, v)
+		originalOrder = append(originalOrder, v)
+	}
+
+	// Find longest string & pad encoded strings to this length
+	maxlen := len(originalOrder[len(originalOrder)-1])
+	originalOrder = padStringArray(originalOrder, maxlen)
+	lexicalOrder = padStringArray(lexicalOrder, maxlen)
+
+	// Sort string array
+	lexicalOrder.Sort()
+
+	// Compare ordering with original
+	var mismatch int64
+	for i, v := range originalOrder {
+		// t.Logf("%s %s", v, lexicalOrder[i])
+		if lexicalOrder[i] != v {
+			mismatch++
+		}
+	}
+	assert.Equal(t, int64(0), mismatch, fmt.Sprintf("Expected zero mismatches, got %v", mismatch))
+}
+
+func padStringArray(s []string, maxlen int) []string {
+
+	for i, v := range s {
+		s[i] = pad(v, maxlen)
+	}
+
+	return s
+}
+
+func pad(s string, maxlen int) string {
+	format := fmt.Sprint(`%0`, strconv.Itoa(maxlen), "s")
+	return fmt.Sprintf(format, s)
 }
