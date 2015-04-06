@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"math/big"
 	"sort"
-	"strconv"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -61,6 +60,47 @@ func BenchmarkEncodeInt64Long(b *testing.B) {
 		id = EncodeInt64(9223372036854775807)
 	}
 	result = id
+}
+
+var paddedTestcases = []struct {
+	num     int64
+	encoded string
+}{
+	{1, "000000000000001"},
+	{9, "000000000000009"},
+	{10, "00000000000000A"},
+	{35, "00000000000000Z"},
+	{36, "00000000000000a"},
+	{61, "00000000000000z"},
+	{62, "000000000000010"},
+	{99, "00000000000001b"},
+	{3844, "000000000000100"},
+	{3860, "00000000000010G"},
+	{4815162342, "0000000005Frvgk"},
+	{9223372036854775807, "0000AzL8n0Y58m7"},
+}
+
+func TestEncodeInt64WithPadding(t *testing.T) {
+	e := NewEncoding(encodeStd).Option(Padding(15))
+
+	for _, tc := range paddedTestcases {
+		v := e.EncodeInt64(tc.num)
+		t.Logf("Encoded %v as %s", tc.num, v)
+		assert.Equal(t, tc.encoded, v)
+	}
+}
+
+func TestEncodeInt64WithVaryingPadding(t *testing.T) {
+	testlens := []int{11, 23, 30}
+	for _, tl := range testlens {
+		e := NewEncoding(encodeStd).Option(Padding(tl))
+
+		for _, tc := range paddedTestcases {
+			v := e.EncodeInt64(tc.num)
+			t.Logf("Encoded %v as %s", tc.num, v)
+			assert.Equal(t, tl, len(v))
+		}
+	}
 }
 
 var bigTestcases = []struct {
@@ -216,14 +256,9 @@ func TestLexicalPaddedSort(t *testing.T) {
 	assert.Equal(t, int64(0), mismatch, fmt.Sprintf("Expected zero mismatches, got %v", mismatch))
 }
 
-func padStringArray(s []string, maxlen int) []string {
+func padStringArray(s []string, minlen int) []string {
 	for i, v := range s {
-		s[i] = pad(v, maxlen)
+		s[i] = StdEncoding.pad(v, minlen)
 	}
 	return s
-}
-
-func pad(s string, maxlen int) string {
-	format := fmt.Sprint(`%0`, strconv.Itoa(maxlen), "s")
-	return fmt.Sprintf(format, s)
 }

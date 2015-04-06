@@ -2,15 +2,28 @@
 package base62
 
 import (
+	"fmt"
 	"math"
 	"math/big"
+	"strconv"
 	"strings"
 )
 
 const base = 62
 
 type Encoding struct {
-	encode string
+	encode  string
+	padding int
+}
+
+// Option sets a number of optional parameters on the encoding
+func (e *Encoding) Option(opts ...option) *Encoding {
+	for _, opt := range opts {
+		opt(e)
+	}
+
+	// Return the encoding to allow chaining
+	return e
 }
 
 const encodeStd = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
@@ -24,6 +37,18 @@ func NewEncoding(encoder string) *Encoding {
 
 // StdEncoding is the standard base62 encoding
 var StdEncoding = NewEncoding(encodeStd)
+
+// Configurable options for an Encoding
+
+type option func(*Encoding)
+
+// Padding sets the minimum string length returned when encoding
+// strings shorter than this will be left padded with zeros
+func Padding(n int) option {
+	return func(e *Encoding) {
+		e.padding = n
+	}
+}
 
 /**
  * Encoder
@@ -42,7 +67,7 @@ func EncodeBigInt(n *big.Int) string {
 // EncodeInt64 returns the base62 encoding of n
 func (e *Encoding) EncodeInt64(n int64) string {
 	var (
-		s   = make([]byte, 0)
+		b   = make([]byte, 0)
 		rem int64
 	)
 
@@ -51,16 +76,21 @@ func (e *Encoding) EncodeInt64(n int64) string {
 	for n > 0 {
 		rem = n % base
 		n = n / base
-		s = append([]byte{e.encode[rem]}, s...)
+		b = append([]byte{e.encode[rem]}, b...)
 	}
 
-	return string(s)
+	s := string(b)
+	if e.padding > 0 {
+		s = e.pad(s, e.padding)
+	}
+
+	return s
 }
 
 // EncodeBigInt returns the base62 encoding of an arbitrary precision integer
 func (e *Encoding) EncodeBigInt(n *big.Int) string {
 	var (
-		s    = make([]byte, 0)
+		b    = make([]byte, 0)
 		rem  = new(big.Int)
 		bse  = new(big.Int)
 		zero = new(big.Int)
@@ -73,10 +103,15 @@ func (e *Encoding) EncodeBigInt(n *big.Int) string {
 	// Prepend as an additional character is the higher power
 	for n.Cmp(zero) == 1 {
 		n, rem = n.DivMod(n, bse, rem)
-		s = append([]byte{e.encode[rem.Int64()]}, s...)
+		b = append([]byte{e.encode[rem.Int64()]}, b...)
 	}
 
-	return string(s)
+	s := string(b)
+	if e.padding > 0 {
+		e.pad(s, e.padding)
+	}
+
+	return s
 }
 
 /**
@@ -149,4 +184,14 @@ func (e *Encoding) DecodeToBigInt(s string) *big.Int {
 	}
 
 	return n
+}
+
+// pad a string to a minimum length with zero characters
+func (e *Encoding) pad(s string, minlen int) string {
+	if len(s) >= minlen {
+		return s
+	}
+
+	format := fmt.Sprint(`%0`, strconv.Itoa(minlen), "s")
+	return fmt.Sprintf(format, s)
 }
