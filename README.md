@@ -44,5 +44,11 @@ func main() {
     b.SetString("340282366920938463463374607431768211455") // 128bit unsigned int
     bigEncoded := base62.EncodeBigInt(b)
     fmt.Println(bigEncoded) // prints 7n42DGM5Tflk9n8mt7Fhc7
+
+    // Padding can be specified using an option on an Encoding
+    // eg. to pad strings to a minimum length of 15 chars:
+    e := base62.StdEncoding.Option(Padding(15))
+    encoded = e.EncodeInt64(n)
+    fmt.Println(encoded) // prints 0000000005Frvgk
 }
 ```
