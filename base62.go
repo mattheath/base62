@@ -25,9 +25,18 @@ func NewEncoding(encoder string) *Encoding {
 // StdEncoding is the standard base62 encoding
 var StdEncoding = NewEncoding(encodeStd)
 
+/**
+ * Encoder
+ */
+
 // EncodeInt64 returns the base62 encoding of n using the StdEncoding
 func EncodeInt64(n int64) string {
 	return StdEncoding.EncodeInt64(n)
+}
+
+// EncodeBigInt returns the base62 encoding of an arbitrary precision integer using the StdEncoding
+func EncodeBigInt(n *big.Int) string {
+	return StdEncoding.EncodeBigInt(n)
 }
 
 // EncodeInt64 returns the base62 encoding of n
@@ -46,11 +55,6 @@ func (e *Encoding) EncodeInt64(n int64) string {
 	}
 
 	return string(s)
-}
-
-// EncodeBigInt returns the base62 encoding of an arbitrary precision integer using the StdEncoding
-func EncodeBigInt(n *big.Int) string {
-	return StdEncoding.EncodeBigInt(n)
 }
 
 // EncodeBigInt returns the base62 encoding of an arbitrary precision integer
@@ -75,9 +79,19 @@ func (e *Encoding) EncodeBigInt(n *big.Int) string {
 	return string(s)
 }
 
+/**
+ * Decoder
+ */
+
 // DecodeToInt64 decodes a base62 encoded string using the StdEncoding
 func DecodeToInt64(s string) int64 {
 	return StdEncoding.DecodeToInt64(s)
+}
+
+// DecodeToBigInt returns an arbitrary precision integer from the base62
+// encoded string using the StdEncoding
+func DecodeToBigInt(s string) *big.Int {
+	return StdEncoding.DecodeToBigInt(s)
 }
 
 // DecodeToInt64 decodes a base62 encoded string
@@ -101,12 +115,6 @@ func (e *Encoding) DecodeToInt64(s string) int64 {
 	}
 
 	return int64(n)
-}
-
-// DecodeToBigInt returns an arbitrary precision integer from the base62
-// encoded string using the StdEncoding
-func DecodeToBigInt(s string) *big.Int {
-	return StdEncoding.DecodeToBigInt(s)
 }
 
 // DecodeToBigInt returns an arbitrary precision integer from the base62 encoded string
