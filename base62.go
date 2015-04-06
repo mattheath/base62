@@ -13,7 +13,7 @@ const encodeStd = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxy
 // EncodeInt64 returns the base62 encoding of n
 func EncodeInt64(n int64) string {
 	var (
-		s   []byte = make([]byte, 0)
+		s   = make([]byte, 0)
 		rem int64
 	)
 
@@ -54,10 +54,10 @@ func DecodeToInt64(s string) int64 {
 // EncodeBigInt return the base62 encoding of arbitrary precision integers
 func EncodeBigInt(n *big.Int) string {
 	var (
-		s    []byte   = make([]byte, 0)
-		rem  *big.Int = new(big.Int)
-		bse  *big.Int = new(big.Int)
-		zero *big.Int = new(big.Int)
+		s    = make([]byte, 0)
+		rem  = new(big.Int)
+		bse  = new(big.Int)
+		zero = new(big.Int)
 	)
 	bse.SetInt64(base)
 	zero.SetInt64(0)
@@ -76,13 +76,13 @@ func EncodeBigInt(n *big.Int) string {
 // DecodeToBigInt returns an arbitrary precision integer from the base62 encoded string
 func DecodeToBigInt(s string) *big.Int {
 	var (
-		n *big.Int = new(big.Int)
+		n = new(big.Int)
 
-		c     *big.Int = new(big.Int)
-		idx   *big.Int = new(big.Int)
-		power *big.Int = new(big.Int)
-		exp   *big.Int = new(big.Int)
-		bse   *big.Int = new(big.Int)
+		c     = new(big.Int)
+		idx   = new(big.Int)
+		power = new(big.Int)
+		exp   = new(big.Int)
+		bse   = new(big.Int)
 	)
 	bse.SetInt64(base)
 

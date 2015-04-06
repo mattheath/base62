@@ -94,7 +94,7 @@ var bigTestcases = []struct {
 func TestEncodeBigInt(t *testing.T) {
 	for _, tc := range bigTestcases {
 		var (
-			n  *big.Int = new(big.Int)
+			n  = new(big.Int)
 			ok bool
 		)
 
@@ -109,7 +109,7 @@ func TestEncodeBigInt(t *testing.T) {
 
 func BenchmarkEncodeBigIntVeryLong(b *testing.B) {
 	var (
-		v *big.Int = new(big.Int)
+		v = new(big.Int)
 		s string
 	)
 	v.SetString("340282366920938463463374607431768211455", 10)
