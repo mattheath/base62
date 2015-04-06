@@ -1,5 +1,7 @@
 # base62
 
+[![Join the chat at https://gitter.im/mattheath/base62](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/mattheath/base62?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 [![Build Status](https://travis-ci.org/mattheath/base62.svg?branch=master)](https://travis-ci.org/mattheath/base62) [![GoDoc](https://godoc.org/github.com/mattheath/base62?status.svg)](https://godoc.org/github.com/mattheath/base62)
 
 `base62` implements base62 encoding for integer numbers of arbitrary precision.
