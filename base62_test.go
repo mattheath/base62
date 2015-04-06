@@ -135,6 +135,41 @@ func TestDecodeToBigInt(t *testing.T) {
 	}
 }
 
+// Ensure than padded base62 strings are correctly decoded
+
+func TestPaddedDecodeToInt64(t *testing.T) {
+	testcases := []struct {
+		encoded string
+		result  int64
+	}{
+		{"000005Frvgk", 4815162342},
+		{"000000000AzL8n0Y58m7", 9223372036854775807},
+	}
+
+	for _, tc := range testcases {
+		v := DecodeToInt64(tc.encoded)
+		t.Logf("Decoded %s to %v", tc.encoded, v)
+		assert.Equal(t, tc.result, v)
+	}
+}
+
+func TestPaddedDecodeToBigInt(t *testing.T) {
+	testcases := []struct {
+		encoded string
+		result  string
+	}{
+		{"0000000000000000000000000000000000005Frvgk", "4815162342"},
+		{"000000000000000000003tX16dB2jpss4tZORYcqoX", "170141183460469231731687303715884105757"},
+		{"000000000000000000007n42DGM5Tflk9n8mt7Fhc7", "340282366920938463463374607431768211455"},
+	}
+
+	for _, tc := range testcases {
+		v := DecodeToBigInt(tc.encoded)
+		t.Logf("Decoded %s to %v", tc.encoded, v)
+		assert.Equal(t, tc.result, v.String())
+	}
+}
+
 // TestLexicalPaddedSort tests that numbers encoded as base62 strings
 // are correctly lexically sorted with the original order preserved
 // if these are left padded to the same length.
