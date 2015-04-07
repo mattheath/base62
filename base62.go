@@ -113,7 +113,7 @@ func (e *Encoding) EncodeBigInt(n *big.Int) string {
 
 	s := string(b)
 	if e.padding > 0 {
-		e.pad(s, e.padding)
+		s = e.pad(s, e.padding)
 	}
 
 	return s
