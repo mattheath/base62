@@ -135,6 +135,8 @@ var bigTestcases = []struct {
 	{"170141183460469231731687303715884105727", "3tX16dB2jpss4tZORYcqo3"}, // max signed 128bit int
 	{"170141183460469231731687303715884105757", "3tX16dB2jpss4tZORYcqoX"}, // max signed 128bit int + 30
 	{"340282366920938463463374607431768211455", "7n42DGM5Tflk9n8mt7Fhc7"}, // max unsigned 128bit int
+
+	{"2707803647802660400290261537185326956543", "zzzzzzzzzzzzzzzzzzzzzz"}, // max 22 character when encoded
 }
 
 func TestEncodeBigInt(t *testing.T) {
