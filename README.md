@@ -34,8 +34,9 @@ import (
 )
 
 func main() {
-	// Encoding 64 bit integers
-	var n int64 = 4815162342
+
+    // Encoding 64 bit integers
+    var n int64 = 4815162342
     encoded := base62.EncodeInt64(n)
     fmt.Println(encoded) // prints 5Frvgk
 
